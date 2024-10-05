@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>LG Way Fit Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 문제 영역 -->
+    <div id="questionArea">
+        <h1>정답 선택</h1>
+        <form id="quizForm">
+            <div id="sectionsContainer">
+                <!-- 언어이해 영역 -->
+                <div class="section">
+                    <h2>언어이해</h2>
+                    <div id="languageUnderstanding">
+                        <script>
+                            for (let i = 1; i <= 15; i++) {
+                                document.write('<div class="question" id="lu_question' + i + '">');
+                                document.write('<p>' + i + '번 문제</p>');
+                                for (let j = 1; j <= 5; j++) {
+                                    document.write('<label><input type="radio" name="lu_q' + i + '" value="' + j + '"> ' + j + '</label>');
+                                }
+                                document.write('</div><hr>');
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <!-- 언어추리 영역 -->
+                <div class="section">
+                    <h2>언어추리</h2>
+                    <div id="languageReasoning">
+                        <script>
+                            for (let i = 1; i <= 15; i++) {
+                                document.write('<div class="question" id="lr_question' + i + '">');
+                                document.write('<p>' + i + '번 문제</p>');
+                                for (let j = 1; j <= 5; j++) {
+                                    document.write('<label><input type="radio" name="lr_q' + i + '" value="' + j + '"> ' + j + '</label>');
+                                }
+                                document.write('</div><hr>');
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <!-- 자료해석 영역 -->
+                <div class="section">
+                    <h2>자료해석</h2>
+                    <div id="dataInterpretation">
+                        <script>
+                            for (let i = 1; i <= 15; i++) {
+                                document.write('<div class="question" id="di_question' + i + '">');
+                                document.write('<p>' + i + '번 문제</p>');
+                                for (let j = 1; j <= 5; j++) {
+                                    document.write('<label><input type="radio" name="di_q' + i + '" value="' + j + '"> ' + j + '</label>');
+                                }
+                                document.write('</div><hr>');
+                            }
+                        </script>
+                    </div>
+                </div>
+
+                <!-- 창의수리 영역 -->
+                <div class="section">
+                    <h2>창의수리</h2>
+                    <div id="creativeMath">
+                        <script>
+                            for (let i = 1; i <= 15; i++) {
+                                document.write('<div class="question" id="cm_question' + i + '">');
+                                document.write('<p>' + i + '번 문제</p>');
+                                for (let j = 1; j <= 5; j++) {
+                                    document.write('<label><input type="radio" name="cm_q' + i + '" value="' + j + '"> ' + j + '</label>');
+                                }
+                                document.write('</div><hr>');
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- 타이머 및 제출 버튼 -->
+        <div id="controls">
+            <button onclick="startTimer()">시작</button>
+            <button onclick="pauseTimer()">일시정지</button>
+            <button onclick="resetTimer()">초기화</button>
+            <span id="timer">10:00</span>
+            <button onclick="submitQuiz()">제출하기</button>
+        </div>
+
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+        <button id="clearButton">Clear</button>
+
+        <script>
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+            var isDrawing = false;
+            var lastX = 0;
+            var lastY = 0;
+
+            // 그리기 시작
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            function startDrawing(event) {
+                isDrawing = true;
+                [lastX, lastY] = [event.offsetX, event.offsetY];
+            }
+
+            function draw(event) {
+                if (!isDrawing) return;
+                context.beginPath();
+                context.moveTo(lastX, lastY);
+                context.lineTo(event.offsetX, event.offsetY);
+                context.stroke();
+                [lastX, lastY] = [event.offsetX, event.offsetY];
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            // Clear 버튼을 클릭하면 캔버스 전체를 지움
+            document.getElementById('clearButton').addEventListener('click', function() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            });
+        </script>
+
+    </div>
+
+    <!-- 사이드바 -->
+    <div id="sidebar">
+        <!-- 메모장 -->
+        <div id="notepad">
+            <h2>메모장</h2>
+            <textarea id="noteArea"></textarea>
+        </div>
+
+        <!-- 계산기 -->
+        <div id="calculator">
+            <h2>계산기</h2>
+            <div id="calcDisplay">0</div>
+            <div id="calcButtons">
+                <!-- 계산기 버튼들 -->
+                <!-- 첫 번째 행 -->
+                <button onclick="clearCalc()">C</button>
+                <button onclick="appendCalc('(')">(</button>
+                <button onclick="appendCalc(')')">)</button>
+                <button onclick="appendCalc('/')">÷</button><br>
+
+                <!-- 두 번째 행 -->
+                <button onclick="appendCalc('7')">7</button>
+                <button onclick="appendCalc('8')">8</button>
+                <button onclick="appendCalc('9')">9</button>
+                <button onclick="appendCalc('*')">×</button><br>
+
+                <!-- 세 번째 행 -->
+                <button onclick="appendCalc('4')">4</button>
+                <button onclick="appendCalc('5')">5</button>
+                <button onclick="appendCalc('6')">6</button>
+                <button onclick="appendCalc('-')">−</button><br>
+
+                <!-- 네 번째 행 -->
+                <button onclick="appendCalc('1')">1</button>
+                <button onclick="appendCalc('2')">2</button>
+                <button onclick="appendCalc('3')">3</button>
+                <button onclick="appendCalc('+')">+</button><br>
+
+                <!-- 다섯 번째 행 -->
+                <button onclick="appendCalc('0')">0</button>
+                <button onclick="appendCalc('.')">.</button>
+                <button onclick="calculate()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 표시 -->
+    <div id="resultArea" style="display:none;">
+        <h2>결과</h2>
+        <div id="resultText"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
